@@ -1,973 +1,1361 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
+<!DOCTYPE html><html lang="es"><head>
+
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cotización — FLVCKKA × Playa Vikingos | Zender Lab</title>
+<title>Cotización · FLVCKKA × Playa Vikingos · Zender Lab</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
 <style>
   :root {
-    --black: #0a0a0a;
-    --dark: #111111;
-    --mid: #1c1c1c;
-    --border: #2a2a2a;
-    --muted: #555;
-    --light: #999;
-    --off-white: #e8e8e8;
-    --white: #f5f5f5;
-    --accent: #ffffff;
-    --gold: #c9a84c;
-    --gold-light: #e8c96a;
-    --red: #cc3333;
-    --green: #2d7a4a;
+    --bg:           #fbfbfd;     /* Apple page bg */
+    --surface:      #ffffff;
+    --surface-2:    #f5f5f7;     /* Apple secondary bg */
+    --surface-3:    #ececef;
+    --ink:          #1d1d1f;     /* Apple primary text */
+    --ink-2:        #2c2c2e;
+    --muted:        #6e6e73;     /* Apple secondary text */
+    --muted-2:      #86868b;     /* Apple tertiary */
+    --line:         #d2d2d7;     /* Apple separator */
+    --line-soft:    #e8e8ed;
+    --hairline:     #00000010;
+    --blue:         #0071e3;     /* Apple system blue */
+    --blue-deep:    #0066cc;
+    --blue-soft:    rgba(0,113,227,0.08);
+    --red:          #d70015;
+    --green:        #248a3d;
+    --orange:       #b25000;
+    --r-sm:  10px;
+    --r-md:  18px;
+    --r-lg:  28px;
+    --r-xl:  40px;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.04), 0 0 0 0.5px rgba(0,0,0,0.06);
+    --shadow-md: 0 6px 24px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-lg: 0 24px 60px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.04);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
+  html, body { background: var(--bg); }
   body {
-    background: var(--black);
-    color: var(--off-white);
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 300;
-    line-height: 1.6;
-    font-size: 15px;
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", system-ui, sans-serif;
+    font-weight: 400;
+    line-height: 1.47;
+    font-size: 17px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    letter-spacing: -0.003em;
+  }
+  .mono { font-family: "JetBrains Mono", "SF Mono", ui-monospace, monospace; font-weight: 500; }
+
+  /* ====== PAGE FRAME — generous safe area ====== */
+  .page {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 24px;        /* outer safe area */
+  }
+  .stack { display: flex; flex-direction: column; gap: 24px; padding: 24px 0 64px; }
+
+  /* ===== Surface card primitive ===== */
+  .card {
+    background: var(--surface);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-sm);
+    padding: 56px;
+    overflow: hidden;            /* prevents content bleed */
+    position: relative;
+    isolation: isolate;
+  }
+  /* Abstract logo watermark — top-right corner, only the head/camera shows */
+  .card::after,
+  .hero::after,
+  .pkg-card::after {
+    content: "";
+    position: absolute;
+    top: -240px;
+    right: -440px;
+    width: 1180px;
+    height: 1520px;
+    background-image: url("assets/zender-logo.jpg");
+    background-repeat: no-repeat;
+    background-position: top left;
+    background-size: contain;
+    opacity: 0.06;
+    pointer-events: none;
+    z-index: 0;
+    mix-blend-mode: multiply;
+  }
+  .card.dark::after,
+  .pkg-card.featured::after {
+    opacity: 0.10;
+    filter: invert(1);
+    mix-blend-mode: screen;
+  }
+  .card > *,
+  .hero > *,
+  .pkg-card > * { position: relative; z-index: 1; }
+  .card.dark {
+    background: linear-gradient(180deg, #1d1d1f 0%, #000 100%);
+    color: #f5f5f7;
+  }
+  .card.tinted {
+    background: var(--surface-2);
   }
 
-  /* ── HERO ── */
+  /* ===== TOP BAR ===== */
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 8px;
+    color: var(--muted);
+    font-size: 13px;
+    letter-spacing: -0.005em;
+  }
+  .topbar .brand { display: flex; align-items: center; gap: 16px; color: var(--ink); font-weight: 600; font-size: 17px; letter-spacing: -0.012em; }
+  .topbar .brand img { width: 72px; height: 72px; object-fit: contain; border-radius: 14px; }
+  .topbar .meta { display: flex; gap: 28px; }
+  .topbar .meta b { color: var(--ink); font-weight: 500; }
+
+  /* ===== HERO CARD ===== */
   .hero {
+    padding: 80px 56px 64px;
+    background: linear-gradient(180deg, #ffffff 0%, #fafafc 100%);
+    border-radius: var(--r-xl);
+    box-shadow: var(--shadow-md);
     position: relative;
-    background: var(--dark);
-    border-bottom: 1px solid var(--border);
-    padding: 56px 64px 48px;
     overflow: hidden;
+    isolation: isolate;
   }
   .hero::before {
-    content: '';
+    content: "";
     position: absolute;
-    top: 0; right: 0;
-    width: 50%;
-    height: 100%;
-    background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.015) 100%);
+    top: -200px; right: -200px;
+    width: 520px; height: 520px;
+    background: radial-gradient(circle, rgba(0,113,227,0.10) 0%, transparent 70%);
     pointer-events: none;
   }
-  .hero-inner {
-    max-width: 960px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 48px;
+  .hero-eyebrow {
+    display: inline-flex;
     align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--blue);
+    font-weight: 500;
+    letter-spacing: -0.003em;
+    margin-bottom: 28px;
+    padding: 6px 14px;
+    background: var(--blue-soft);
+    border-radius: 999px;
   }
-  .logo-wrap img {
-    width: 88px;
-    filter: invert(1);
-    opacity: 0.92;
+  .hero-eyebrow::before {
+    content: "";
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--blue);
+  }
+  .hero-title {
+    font-size: clamp(48px, 7.2vw, 84px);
+    line-height: 1.04;
+    letter-spacing: -0.035em;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 24px;
+    max-width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+  }
+  .hero-title .row2 {
     display: block;
+    background: linear-gradient(135deg, #0071e3 0%, #5856d6 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 600;
   }
-  .hero-text {}
-  .label {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.18em;
+  .hero-sub {
+    font-size: 21px;
+    line-height: 1.45;
     color: var(--muted);
-    text-transform: uppercase;
-    margin-bottom: 10px;
-  }
-  h1 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(42px, 6vw, 72px);
-    letter-spacing: 0.04em;
-    line-height: 0.92;
-    color: var(--white);
-    margin-bottom: 16px;
-  }
-  h1 span {
-    color: var(--gold);
+    max-width: 620px;
+    margin-bottom: 56px;
+    font-weight: 400;
+    letter-spacing: -0.012em;
   }
   .hero-meta {
-    display: flex;
-    gap: 32px;
-    flex-wrap: wrap;
-    margin-top: 20px;
-  }
-  .hero-meta-item {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    color: var(--muted);
-    text-transform: uppercase;
-  }
-  .hero-meta-item strong {
-    display: block;
-    color: var(--off-white);
-    font-size: 13px;
-    letter-spacing: 0.04em;
-    margin-top: 2px;
-  }
-
-  /* ── LAYOUT ── */
-  .container {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 0 64px;
-  }
-  section {
-    padding: 56px 0;
-    border-bottom: 1px solid var(--border);
-  }
-  section:last-child { border-bottom: none; }
-
-  .section-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.22em;
-    color: var(--muted);
-    text-transform: uppercase;
-    margin-bottom: 28px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .section-label::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
-
-  /* ── INFO GRID ── */
-  .info-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
   }
-  .info-cell {
-    background: var(--dark);
-    padding: 28px 32px;
+  .meta-pill {
+    background: var(--surface-2);
+    border-radius: var(--r-md);
+    padding: 18px 22px;
+    min-width: 0;     /* prevents grid overflow */
   }
-  .info-cell-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.18em;
-    color: var(--muted);
-    text-transform: uppercase;
-    margin-bottom: 16px;
-  }
-  .info-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    padding: 6px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.04);
-  }
-  .info-row:last-child { border-bottom: none; }
-  .info-key {
+  .meta-pill .k {
     font-size: 12px;
     color: var(--muted);
-    flex-shrink: 0;
-    margin-right: 16px;
-  }
-  .info-val {
-    font-size: 14px;
-    color: var(--off-white);
-    text-align: right;
+    margin-bottom: 6px;
     font-weight: 500;
+    letter-spacing: -0.002em;
   }
-
-  /* ── TABLE ── */
-  .services-table {
-    width: 100%;
-    border-collapse: collapse;
-    border: 1px solid var(--border);
-  }
-  .services-table thead tr {
-    background: var(--mid);
-    border-bottom: 1px solid var(--border);
-  }
-  .services-table th {
-    padding: 12px 20px;
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.18em;
-    color: var(--muted);
-    text-transform: uppercase;
-    text-align: left;
-    font-weight: 400;
-  }
-  .services-table th:last-child,
-  .services-table th:nth-last-child(2) { text-align: right; }
-  .services-table td {
-    padding: 18px 20px;
-    border-bottom: 1px solid var(--border);
-    font-size: 14px;
-    color: var(--off-white);
-    vertical-align: top;
-  }
-  .services-table td:nth-child(2) {
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    color: var(--light);
-    white-space: nowrap;
-  }
-  .services-table td:nth-child(3),
-  .services-table td:nth-child(4) {
-    text-align: right;
-    font-family: 'DM Mono', monospace;
-    font-size: 13px;
-    white-space: nowrap;
-  }
-  .services-table tr:nth-child(even) td { background: rgba(255,255,255,0.015); }
-  .services-table tr.courtesy td { opacity: 0.45; }
-  .services-table tr.courtesy td:first-child::after {
-    content: ' — CORTESÍA';
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    color: var(--muted);
-  }
-  .tag {
-    display: inline-block;
-    font-family: 'DM Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.1em;
-    padding: 3px 7px;
-    border-radius: 2px;
-    text-transform: uppercase;
-    margin-left: 8px;
-    vertical-align: middle;
-  }
-  .tag-new { background: rgba(255,255,255,0.08); color: var(--light); }
-
-  /* ── TOTALS ── */
-  .totals {
-    margin-top: 1px;
-    border: 1px solid var(--border);
-    border-top: none;
-  }
-  .total-row {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: center;
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--border);
-  }
-  .total-row:last-child { border-bottom: none; }
-  .total-row.sub { background: var(--dark); }
-  .total-row.iva { background: rgba(201,168,76,0.04); }
-  .total-row.main { background: var(--mid); }
-  .total-row.alt { background: rgba(201,168,76,0.07); }
-  .total-label {
-    font-size: 13px;
-    color: var(--light);
-  }
-  .total-label small {
-    display: block;
-    font-size: 11px;
-    color: var(--muted);
-    margin-top: 2px;
-    font-family: 'DM Mono', monospace;
-  }
-  .total-amount {
-    font-family: 'DM Mono', monospace;
+  .meta-pill .v {
     font-size: 16px;
-    font-weight: 500;
-    color: var(--off-white);
+    color: var(--ink);
+    font-weight: 600;
+    letter-spacing: -0.012em;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
-  .total-row.main .total-label { font-size: 15px; font-weight: 500; color: var(--white); }
-  .total-row.main .total-amount { font-size: 24px; color: var(--white); }
-  .total-row.alt .total-label { color: var(--gold); }
-  .total-row.alt .total-amount { color: var(--gold-light); }
 
-  /* ── INCLUDES ── */
-  .two-col {
+  /* ===== SECTION HEADER (inside cards) ===== */
+  .sec-eyebrow {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--blue);
+    letter-spacing: -0.002em;
+    margin-bottom: 14px;
+  }
+  .sec-title {
+    font-size: clamp(34px, 4.4vw, 52px);
+    line-height: 1.08;
+    letter-spacing: -0.028em;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 14px;
+  }
+  .sec-title .gradient {
+    background: linear-gradient(135deg, #0071e3 0%, #5856d6 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .sec-lead {
+    font-size: 21px;
+    line-height: 1.45;
+    color: var(--muted);
+    max-width: 700px;
+    margin-bottom: 48px;
+    font-weight: 400;
+    letter-spacing: -0.012em;
+  }
+
+  /* ===== DATOS GRID ===== */
+  .data-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .data-tile {
+    background: var(--surface-2);
+    border-radius: var(--r-md);
+    padding: 24px 26px;
+    min-width: 0;
+  }
+  .data-k {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+  .data-v {
+    font-size: 19px;
+    line-height: 1.25;
+    color: var(--ink);
+    font-weight: 600;
+    letter-spacing: -0.018em;
+  }
+  .data-v small {
+    display: block;
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 8px;
+    font-weight: 400;
+    letter-spacing: -0.003em;
+  }
+
+  /* ===== ALCANCE ===== */
+  .scope-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 32px;
+    gap: 16px;
   }
-  .list-block h3 {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
+  .scope-col {
+    background: var(--surface-2);
+    border-radius: var(--r-md);
+    padding: 28px 30px;
+  }
+  .scope-col.included { background: linear-gradient(180deg, #f0f7ff 0%, #f5f5f7 100%); }
+  .scope-col h4 {
+    font-size: 14px;
+    font-weight: 600;
     color: var(--muted);
-    margin-bottom: 16px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--border);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
-  .check-list { list-style: none; }
-  .check-list li {
+  .scope-col h4 .count {
+    background: var(--surface);
+    color: var(--ink);
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .scope-list { list-style: none; }
+  .scope-list li {
     display: flex;
     gap: 12px;
-    align-items: flex-start;
-    padding: 8px 0;
-    font-size: 14px;
-    color: var(--off-white);
-    border-bottom: 1px solid rgba(255,255,255,0.04);
-  }
-  .check-list li:last-child { border-bottom: none; }
-  .check-list li .ico {
-    font-size: 12px;
-    margin-top: 2px;
-    flex-shrink: 0;
-    font-family: 'DM Mono', monospace;
-  }
-  .check-list li .ico.yes { color: var(--white); }
-  .check-list li .ico.no  { color: var(--muted); }
-  .check-list li.dim { color: var(--muted); }
-
-  /* ── GUARANTEE ── */
-  .guarantee-intro {
-    font-size: 14px;
-    color: var(--light);
-    margin-bottom: 28px;
-    max-width: 600px;
-    line-height: 1.7;
-  }
-  .penalty-table {
-    width: 100%;
-    border-collapse: collapse;
-    border: 1px solid var(--border);
-  }
-  .penalty-table th {
-    background: var(--mid);
-    padding: 12px 20px;
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.18em;
-    color: var(--muted);
-    text-transform: uppercase;
-    text-align: left;
-    font-weight: 400;
-  }
-  .penalty-table th:not(:first-child) { text-align: right; }
-  .penalty-table td {
-    padding: 15px 20px;
-    font-size: 14px;
-    border-bottom: 1px solid var(--border);
-    font-family: 'DM Mono', monospace;
-    font-size: 13px;
-  }
-  .penalty-table td:not(:first-child) { text-align: right; }
-  .penalty-table tr:nth-child(even) td { background: rgba(255,255,255,0.015); }
-  .penalty-table tr.ok td { color: var(--white); }
-  .penalty-table tr.danger td { color: var(--red); background: rgba(204,51,51,0.05); }
-  .penalty-table tr.danger td:last-child { font-weight: 600; }
-
-  /* ── COLORIZATION ── */
-  .color-intro {
+    padding: 10px 0;
     font-size: 15px;
-    color: var(--light);
-    line-height: 1.75;
-    max-width: 680px;
-    margin-bottom: 40px;
+    color: var(--ink-2);
+    line-height: 1.45;
+    align-items: flex-start;
+    letter-spacing: -0.003em;
   }
-  .video-compare {
-    border: 1px solid var(--border);
+  .scope-list .ico {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    margin-top: 1px;
+  }
+  .scope-list.yes .ico { background: var(--blue); color: white; }
+  .scope-list.no .ico { background: var(--surface-3); color: var(--muted); }
+  .scope-list.no li { color: var(--muted); }
+
+  /* ===== PIPELINE FLOW ===== */
+  .flow {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+  .flow-step {
+    background: var(--surface-2);
+    border-radius: var(--r-md);
+    padding: 32px 28px 28px;
+    position: relative;
+    min-width: 0;
+  }
+  .flow-step.hl {
+    background: linear-gradient(160deg, #1d1d1f 0%, #000 100%);
+    color: #f5f5f7;
+  }
+  .flow-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 600;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 22px;
+  }
+  .flow-step.hl .flow-num { background: var(--blue); color: white; box-shadow: 0 0 0 6px rgba(0,113,227,0.18); }
+  .flow-name {
+    font-size: 22px;
+    line-height: 1.2;
+    font-weight: 600;
+    letter-spacing: -0.022em;
+    margin-bottom: 12px;
+  }
+  .flow-step.hl .flow-name { color: white; }
+  .flow-name .tag {
+    font-family: "JetBrains Mono", "SF Mono", monospace;
+    font-size: 13px;
+    color: var(--blue);
+    font-weight: 500;
+    letter-spacing: 0;
+    margin-left: 4px;
+  }
+  .flow-step.hl .flow-name .tag { color: #2997ff; }
+  .flow-desc {
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: var(--muted);
+    margin-bottom: 0;
+    letter-spacing: -0.003em;
+  }
+  .flow-step.hl .flow-desc { color: #a1a1a6; }
+
+  /* ===== VIDEO ===== */
+  .video-card {
+    border-radius: var(--r-md);
     overflow: hidden;
     background: #000;
+    box-shadow: var(--shadow-md);
+    margin-bottom: 48px;
   }
-  .video-compare video {
-    width: 100%;
-    display: block;
-    max-height: 520px;
-    object-fit: contain;
-    background: #000;
-  }
-  .video-label {
-    background: var(--mid);
-    padding: 14px 24px;
+  .video-card iframe { width: 100%; height: 540px; display: block; border: none; background: #000; }
+  .video-card.compact iframe { height: 260px; }
+  .video-bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-top: 1px solid var(--border);
+    padding: 14px 22px;
+    background: #1d1d1f;
+    color: #a1a1a6;
+    font-size: 13px;
+    font-weight: 500;
   }
-  .video-label span {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    color: var(--light);
-    text-transform: uppercase;
-  }
-  .video-label .play-hint {
-    font-size: 11px;
-    color: var(--muted);
-    font-family: 'DM Mono', monospace;
-    letter-spacing: 0.08em;
-  }
+  .video-bar .play { color: #2997ff; }
 
-  .compare-grid {
+  /* ===== COMPARE ===== */
+  .compare {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-    margin-top: 32px;
+    gap: 16px;
+    margin-bottom: 48px;
   }
-  .compare-col {
-    background: var(--dark);
-    padding: 28px 32px;
+  .compare > div {
+    border-radius: var(--r-md);
+    padding: 28px 30px;
   }
-  .compare-col h4 {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    margin-bottom: 16px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--border);
+  .compare .before { background: var(--surface-2); }
+  .compare .after  {
+    background: linear-gradient(160deg, #1d1d1f 0%, #000 100%);
+    color: #f5f5f7;
   }
-  .compare-col.before h4 { color: var(--muted); }
-  .compare-col.after h4 { color: var(--off-white); }
-  .compare-list { list-style: none; }
-  .compare-list li {
-    font-size: 13px;
-    padding: 7px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.04);
-    display: flex;
-    gap: 10px;
-    align-items: flex-start;
+  .compare h5 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 18px;
+    color: var(--muted);
+    display: flex; align-items: center; gap: 10px;
   }
-  .compare-list li:last-child { border-bottom: none; }
-  .compare-col.before .compare-list li { color: var(--muted); }
-  .compare-col.after .compare-list li { color: var(--off-white); }
-  .compare-col.before .ico-cmp { color: var(--muted); }
-  .compare-col.after .ico-cmp { color: var(--white); }
+  .compare .after h5 { color: #a1a1a6; }
+  .compare h5::before {
+    content: ""; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--muted-2);
+  }
+  .compare .after h5::before { background: var(--blue); box-shadow: 0 0 0 4px rgba(0,113,227,0.25); }
+  .compare ul { list-style: none; }
+  .compare li {
+    padding: 10px 0;
+    font-size: 15px;
+    line-height: 1.5;
+    display: flex; gap: 12px;
+    color: var(--ink-2);
+    letter-spacing: -0.003em;
+  }
+  .compare .before li { color: var(--muted); }
+  .compare .after li { color: #d2d2d7; }
+  .compare .ico-x {
+    width: 20px; flex-shrink: 0;
+    color: var(--muted-2);
+    font-weight: 600;
+  }
+  .compare .after .ico-x { color: var(--blue); }
 
+  /* ===== GRADE CARDS ===== */
   .grade-cards {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 16px;
-    margin-top: 32px;
   }
   .grade-card {
-    border: 1px solid var(--border);
-    padding: 24px;
-    background: var(--dark);
+    background: var(--surface-2);
+    border-radius: var(--r-md);
+    padding: 30px 28px;
+    min-width: 0;
   }
-  .grade-num {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 36px;
-    color: rgba(255,255,255,0.08);
-    line-height: 1;
+  .grade-card .gn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: var(--surface);
+    color: var(--blue);
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 18px;
+    box-shadow: var(--shadow-sm);
+  }
+  .grade-card h6 {
+    font-size: 19px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 10px;
+    letter-spacing: -0.02em;
+  }
+  .grade-card p {
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: var(--muted);
+    letter-spacing: -0.003em;
+  }
+
+  /* ===== PACKAGE CARD ===== */
+  .pkg-card {
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    background: var(--surface);
+    position: relative;
+    isolation: isolate;
+  }
+  .pkg-head {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 32px;
+    padding: 56px;
+    align-items: end;
+    background: var(--surface);
+  }
+  .pkg-card.featured .pkg-head {
+    background: linear-gradient(160deg, #1d1d1f 0%, #000 100%);
+    color: #f5f5f7;
+  }
+  .pkg-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    margin-bottom: 18px;
+    padding: 6px 14px;
+    background: var(--surface-2);
+    border-radius: 999px;
+  }
+  .pkg-card.featured .pkg-eyebrow { background: rgba(0,113,227,0.18); color: #2997ff; }
+  .pkg-eyebrow::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--muted); }
+  .pkg-card.featured .pkg-eyebrow::before { background: var(--blue); box-shadow: 0 0 0 3px rgba(0,113,227,0.3); }
+  .pkg-name {
+    font-size: clamp(38px, 5vw, 60px);
+    line-height: 1.04;
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    color: var(--ink);
     margin-bottom: 12px;
   }
-  .grade-title {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--off-white);
-    margin-bottom: 10px;
-  }
-  .grade-desc {
-    font-size: 13px;
+  .pkg-card.featured .pkg-name { color: white; }
+  .pkg-name span {
+    display: block;
+    font-size: 0.4em;
     color: var(--muted);
-    line-height: 1.65;
+    font-weight: 500;
+    margin-top: 10px;
+    letter-spacing: -0.018em;
   }
-
-  /* ── CONDITIONS ── */
-  .conditions-list { list-style: none; }
-  .conditions-list li {
-    display: grid;
-    grid-template-columns: 28px 1fr;
-    gap: 16px;
-    padding: 16px 0;
-    border-bottom: 1px solid var(--border);
-    font-size: 14px;
-    color: var(--light);
-    line-height: 1.65;
-  }
-  .conditions-list li:last-child { border-bottom: none; }
-  .conditions-list .num {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
+  .pkg-card.featured .pkg-name span { color: #a1a1a6; }
+  .pkg-tag {
+    font-size: 17px;
+    line-height: 1.45;
     color: var(--muted);
-    padding-top: 2px;
+    max-width: 480px;
+    letter-spacing: -0.008em;
   }
-  .conditions-list .highlight {
-    color: var(--off-white);
+  .pkg-card.featured .pkg-tag { color: #a1a1a6; }
+  .pkg-price { text-align: right; min-width: 0; }
+  .pkg-price .label {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 4px;
     font-weight: 500;
   }
-  .conditions-list .red { color: var(--red); }
+  .pkg-card.featured .pkg-price .label { color: #a1a1a6; }
+  .pkg-price .num {
+    font-size: 56px;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    color: var(--ink);
+  }
+  .pkg-card.featured .pkg-price .num { color: white; }
+  .pkg-price .curr {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 8px;
+    font-weight: 500;
+  }
+  .pkg-card.featured .pkg-price .curr { color: #a1a1a6; }
 
-  /* ── SIGNATURE ── */
+  /* ===== TABLE ===== */
+  .pkg-body { padding: 0 56px 56px; }
+  .stable {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .stable thead tr { border-bottom: 1px solid var(--line); }
+  .stable th {
+    padding: 14px 0 16px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    text-align: left;
+    letter-spacing: -0.002em;
+  }
+  .stable th:nth-child(2) { text-align: center; }
+  .stable th:nth-child(3),
+  .stable th:nth-child(4) { text-align: right; }
+  .stable td {
+    padding: 22px 14px 22px 0;
+    border-bottom: 1px solid var(--line-soft);
+    font-size: 15px;
+    color: var(--ink);
+    vertical-align: top;
+    line-height: 1.45;
+  }
+  .stable td:first-child { padding-left: 0; max-width: 460px; }
+  .stable td:nth-child(2) {
+    text-align: center;
+    font-size: 14px; color: var(--muted);
+    white-space: nowrap; padding-left: 14px;
+  }
+  .stable td:nth-child(3),
+  .stable td:nth-child(4) {
+    text-align: right;
+    font-family: "JetBrains Mono", "SF Mono", monospace;
+    font-size: 14.5px;
+    font-weight: 500;
+    white-space: nowrap; padding-left: 14px;
+    font-feature-settings: "tnum";
+  }
+  .stable td:nth-child(4) { color: var(--ink); font-weight: 600; }
+  .stable .item-name {
+    font-weight: 600;
+    letter-spacing: -0.012em;
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  }
+  .stable .desc {
+    font-size: 13.5px;
+    color: var(--muted);
+    margin-top: 5px;
+    line-height: 1.5;
+    font-weight: 400;
+    letter-spacing: -0.003em;
+  }
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    padding: 2px 9px;
+    background: var(--blue-soft);
+    color: var(--blue);
+    border-radius: 999px;
+    font-weight: 600;
+    letter-spacing: -0.002em;
+  }
+  .stable tr.courtesy td { color: var(--muted); }
+  .stable tr.courtesy td:first-child::after {
+    content: "  ·  cortesía";
+    font-size: 12px;
+    color: var(--blue);
+    font-weight: 600;
+  }
+  .stable tr.courtesy td:nth-child(4) { color: var(--blue); }
+
+  /* ===== TOTALS ===== */
+  .totals {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: 32px;
+  }
+  .total-tile {
+    background: var(--surface-2);
+    border-radius: var(--r-md);
+    padding: 22px 24px;
+    min-width: 0;
+  }
+  .total-tile .tk {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+  .total-tile .tv {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.022em;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .total-tile .tv .cur {
+    font-size: 12px;
+    color: var(--muted);
+    margin-left: 4px;
+    font-weight: 500;
+  }
+  .total-tile .tnote {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 8px;
+    font-weight: 400;
+  }
+  .total-tile.hero {
+    background: linear-gradient(160deg, #0071e3 0%, #0066cc 100%);
+    color: white;
+  }
+  .total-tile.hero .tk,
+  .total-tile.hero .tnote,
+  .total-tile.hero .tv .cur { color: rgba(255,255,255,0.75); }
+  .total-tile.hero .tv { color: white; font-size: 30px; }
+
+  /* ===== REC709 BLOCK ===== */
+  .rec-block {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+  .rec-block .rec-text {
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--ink-2);
+    letter-spacing: -0.008em;
+  }
+  .rec-block .rec-text p { margin-bottom: 16px; }
+  .rec-block .rec-text strong {
+    color: var(--blue);
+    font-weight: 600;
+    background: var(--blue-soft);
+    padding: 1px 6px;
+    border-radius: 6px;
+  }
+  .rec-block .rec-text em {
+    font-style: normal;
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  /* ===== GUARANTEE ===== */
+  .guarantee-pull {
+    font-size: 26px;
+    line-height: 1.35;
+    color: var(--ink);
+    margin-bottom: 36px;
+    max-width: 760px;
+    letter-spacing: -0.025em;
+    font-weight: 500;
+  }
+  .guarantee-pull b { color: var(--red); font-weight: 600; }
+  .guarantee-pull u {
+    text-decoration: none;
+    background: var(--blue-soft);
+    color: var(--blue);
+    padding: 1px 8px;
+    border-radius: 6px;
+    font-weight: 600;
+  }
+  .pen-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: var(--surface-2);
+    border-radius: var(--r-md);
+    overflow: hidden;
+  }
+  .pen-table th {
+    padding: 16px 22px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    text-align: left;
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--line);
+  }
+  .pen-table th:not(:first-child) { text-align: right; }
+  .pen-table td {
+    padding: 16px 22px;
+    border-bottom: 1px solid var(--line-soft);
+    font-family: "JetBrains Mono", "SF Mono", monospace;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink-2);
+    background: var(--surface);
+  }
+  .pen-table td:first-child {
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif;
+    font-size: 15px; color: var(--ink); font-weight: 600;
+    letter-spacing: -0.012em;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .pen-table td:first-child::before {
+    content: ""; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--muted-2);
+  }
+  .pen-table td:not(:first-child) { text-align: right; }
+  .pen-table tr:last-child td { border-bottom: none; }
+  .pen-table tr.ok td:first-child::before { background: var(--green); box-shadow: 0 0 0 4px rgba(36,138,61,0.2); }
+  .pen-table tr.warn td:first-child::before { background: var(--orange); }
+  .pen-table tr.danger td { background: rgba(215,0,21,0.04); color: var(--red); }
+  .pen-table tr.danger td:first-child::before { background: var(--red); box-shadow: 0 0 0 4px rgba(215,0,21,0.18); }
+  .pen-table tr.danger td:last-child { font-weight: 700; }
+
+  /* ===== CONDITIONS ===== */
+  .cond-list {
+    list-style: none;
+    counter-reset: c;
+  }
+  .cond-list li {
+    counter-increment: c;
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 24px;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--line-soft);
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--ink-2);
+    letter-spacing: -0.008em;
+  }
+  .cond-list li:last-child { border-bottom: none; }
+  .cond-list li::before {
+    content: counter(c, decimal-leading-zero);
+    font-family: "JetBrains Mono", "SF Mono", monospace;
+    font-size: 14px;
+    color: var(--blue);
+    font-weight: 600;
+  }
+  .cond-list b { color: var(--ink); font-weight: 600; }
+  .cond-list .red { color: var(--red); font-weight: 600; }
+
+  /* ===== SIGNATURE ===== */
   .sig-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 32px;
-    margin-top: 0;
+    gap: 16px;
   }
   .sig-box {
-    border: 1px solid var(--border);
-    padding: 28px 32px;
+    background: var(--surface-2);
+    border-radius: var(--r-md);
+    padding: 32px 36px 28px;
+    min-width: 0;
   }
-  .sig-box-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.18em;
+  .sig-label {
+    font-size: 13px;
     color: var(--muted);
-    text-transform: uppercase;
-    margin-bottom: 40px;
+    font-weight: 500;
+    margin-bottom: 56px;
+    display: flex; align-items: center; gap: 10px;
   }
-  .sig-line {
-    border-top: 1px solid var(--border);
-    margin-top: 0;
-    padding-top: 8px;
-    font-size: 12px;
-    color: var(--muted);
-    font-family: 'DM Mono', monospace;
-    letter-spacing: 0.08em;
+  .sig-label::before {
+    content: ""; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--blue);
   }
-  .sig-name-line {
-    height: 48px;
-  }
+  .sig-line { border-top: 1px solid var(--ink); padding-top: 12px; }
+  .sig-line .name { font-size: 16px; color: var(--ink); font-weight: 600; letter-spacing: -0.012em; }
+  .sig-line .role { font-size: 13px; color: var(--muted); margin-top: 4px; font-weight: 400; }
 
-  /* ── FOOTER ── */
-  footer {
-    background: var(--dark);
-    border-top: 1px solid var(--border);
-    padding: 32px 64px;
-    text-align: center;
+  /* ===== FOOTER CARD ===== */
+  .foot {
+    padding: 56px;
+    border-radius: var(--r-lg);
+    background: linear-gradient(180deg, #1d1d1f 0%, #000 100%);
+    color: #f5f5f7;
+    display: grid;
+    grid-template-columns: 1fr 1.2fr 1fr;
+    gap: 32px;
+    align-items: end;
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
   }
-  footer img {
-    width: 40px;
+  .foot::after {
+    content: "";
+    position: absolute;
+    top: -260px;
+    right: -480px;
+    width: 1280px;
+    height: 1660px;
+    background-image: url("assets/zender-logo.jpg");
+    background-repeat: no-repeat;
+    background-position: top left;
+    background-size: contain;
+    opacity: 0.12;
     filter: invert(1);
-    opacity: 0.25;
-    margin-bottom: 12px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
+    mix-blend-mode: screen;
+    pointer-events: none;
+    z-index: 0;
   }
-  footer p {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.16em;
-    color: var(--muted);
-    text-transform: uppercase;
+  .foot > * { position: relative; z-index: 1; }
+  .foot-mark img {
+    width: 180px;
+    height: 180px;
+    object-fit: contain;
+    filter: invert(1);
+    margin-bottom: 24px;
+    mix-blend-mode: screen;
+    display: block;
+    border-radius: 24px;
+  }
+  .foot-mark .tag {
+    font-size: 12px;
+    color: #a1a1a6;
+    font-weight: 500;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .foot-mark .tag::before {
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--blue); box-shadow: 0 0 0 3px rgba(0,113,227,0.25);
+  }
+  .foot-quote {
+    font-size: 22px;
+    line-height: 1.35;
+    color: white;
+    font-weight: 500;
+    letter-spacing: -0.022em;
+  }
+  .foot-quote span {
+    display: block;
+    font-size: 13px;
+    color: #a1a1a6;
+    font-weight: 400;
+    margin-top: 8px;
+    letter-spacing: -0.003em;
+  }
+  .foot-end {
+    text-align: right;
+    font-size: 13px;
+    color: #a1a1a6;
+    line-height: 1.7;
+  }
+  .foot-end b { color: white; font-weight: 600; }
+
+  /* ====== TABLET ====== */
+  @media (max-width: 980px) {
+    .data-grid, .grade-cards, .flow { grid-template-columns: 1fr 1fr; }
+    .totals { grid-template-columns: 1fr 1fr; }
+    .pkg-head { grid-template-columns: 1fr; gap: 24px; }
+    .pkg-price { text-align: left; }
+    .hero-meta { grid-template-columns: 1fr 1fr; }
   }
 
-  @media(max-width: 720px) {
-    .hero { padding: 32px 24px; }
-    .hero-inner { grid-template-columns: 1fr; gap: 24px; }
-    .container { padding: 0 24px; }
-    .info-grid, .two-col, .compare-grid, .sig-grid, .grade-cards { grid-template-columns: 1fr; }
-    footer { padding: 24px; }
-    section { padding: 40px 0; }
+  /* ====== MOBILE ====== */
+  @media (max-width: 680px) {
+    .page { padding: 0 12px; }
+    .stack { padding: 12px 0 32px; gap: 16px; }
+    .topbar { flex-direction: column; align-items: flex-start; gap: 8px; padding: 16px 8px; }
+    .topbar .meta { gap: 16px; flex-wrap: wrap; }
+    .card, .hero, .foot { padding: 32px 24px; border-radius: var(--r-md); }
+    .pkg-head { padding: 32px 24px; }
+    .pkg-body { padding: 0 24px 32px; }
+    .data-grid, .scope-grid, .compare, .flow, .grade-cards, .totals, .sig-grid { grid-template-columns: 1fr; }
+    .hero-meta { grid-template-columns: 1fr 1fr; }
+    .rec-block { grid-template-columns: 1fr; gap: 24px; }
+    .video-card iframe { height: 220px; }
+    .video-card.compact iframe { height: 200px; }
+    .foot { grid-template-columns: 1fr; gap: 24px; text-align: left; }
+    .foot-end { text-align: left; }
+    .pkg-name { font-size: 36px; }
+    .pkg-price .num { font-size: 44px; }
+    .stable td:first-child { max-width: none; }
+    .stable th:nth-child(3), .stable td:nth-child(3) { display: none; }
+    .pen-table { font-size: 12px; }
+    .pen-table td, .pen-table th { padding: 12px 14px; }
   }
 </style>
 </head>
-<body>
+<body style="">
 
-<!-- HERO -->
-<header class="hero">
-  <div class="hero-inner">
-    <div class="logo-wrap">
-      <img src="zenderlab_logoooo.png" alt="Zender Lab">
+<div class="page">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="brand" style="font-size: 48px;">
+      <img src="assets/zender-logo.jpg" alt="Zender Lab" style="width: 100px; height: 100px;">
+      ZenderLab
     </div>
-    <div class="hero-text">
-      <p class="label">Cotización de servicios · COT-2025-002</p>
-      <h1>FLVCKKA <span>&</span><br>Playa Vikingos<br>Beach Club</h1>
+    <div class="meta">
+      <div>Folio · <b>COT–2025–002</b></div>
+      <div>Emisión · <b>06.05.2025</b></div>
+    </div>
+  </div>
+
+  <div class="stack">
+
+    <!-- HERO -->
+    <header class="hero">
+      <div class="hero-eyebrow">Cotización privada · vigencia 7 días</div>
+      <h1 class="hero-title">
+        FLVCKKA<br>
+        <span class="row2">× Playa Vikingos.</span>
+      </h1>
+      <p class="hero-sub">
+        Cobertura completa del show — del primer ángulo a la entrega final. Operador, equipo, dron, postproducción y entrega.
+      </p>
       <div class="hero-meta">
-        <div class="hero-meta-item">Emitida<strong>6 Mayo 2025</strong></div>
-        <div class="hero-meta-item">Vigencia<strong>7 días naturales</strong></div>
-        <div class="hero-meta-item">Evento<strong>Sáb 9 Mayo 2025</strong></div>
-        <div class="hero-meta-item">Operador<strong>1 persona</strong></div>
+        <div class="meta-pill">
+          <div class="k">Evento</div>
+          <div class="v">Sáb 9 May 2025</div>
+        </div>
+        <div class="meta-pill">
+          <div class="k">Vigencia</div>
+          <div class="v" style=""><span style="font-family: -apple-system, BlinkMacSystemFont, &quot;SF Pro Display&quot;, &quot;SF Pro Text&quot;, Inter, system-ui, sans-serif; letter-spacing: -0.012em;">1 días</span></div>
+        </div>
+        <div class="meta-pill">
+          <div class="k">Operador</div>
+          <div class="v">1 persona</div>
+        </div>
+        <div class="meta-pill">
+          <div class="k">Folio</div>
+          <div class="v">COT–2025–002</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- DATOS -->
+    <section class="card">
+      <p class="sec-eyebrow">01 · Datos</p>
+      <h2 class="sec-title">Quién, qué, cuándo. <span class="gradient">Sin ambigüedades.</span></h2>
+      <p class="sec-lead">Cliente, fechas y entregables — todo definido antes de presionar récord.</p>
+
+      <div class="data-grid">
+        <div class="data-tile">
+          <div class="data-k">Cliente</div>
+          <div class="data-v">Playa Vikingos<br>Beach Club</div>
+        </div>
+        <div class="data-tile">
+          <div class="data-k">Artista</div>
+          <div class="data-v">FLVCKKA<small>Reggaetón · show en vivo</small></div>
+        </div>
+        <div class="data-tile">
+          <div class="data-k">Tipo de servicio</div>
+          <div class="data-v">Cobertura completa<small>Cámara · dron · aftermovie</small></div>
+        </div>
+        <div class="data-tile">
+          <div class="data-k">Fecha del evento</div>
+          <div class="data-v">Sábado 9 de mayo<small>Día completo</small></div>
+        </div>
+        <div class="data-tile">
+          <div class="data-k">Clips · 25 piezas</div>
+          <div class="data-v" style="">Jueves 14 de mayo<small>10 cámara · 10 dron · 5 cortesía</small></div>
+        </div>
+        <div class="data-tile">
+          <div class="data-k">Aftermovie 3 min</div>
+          <div class="data-v" style="">viernes 15 de mayo<small>Google Drive / WeTransfer</small></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ALCANCE -->
+    <section class="card">
+      <p class="sec-eyebrow">02 · Alcance</p>
+      <h2 class="sec-title">Lo que <span class="gradient">sí</span>. Lo que no.</h2>
+      <p class="sec-lead">Inclusiones y exclusiones del servicio — claras desde el inicio.</p>
+
+      <div class="scope-grid">
+        <div class="scope-col included">
+          <h4>Incluye <span class="count">9</span></h4>
+          <ul class="scope-list yes">
+            <li><span class="ico">✓</span><span>Dirección creativa y guionización del evento</span></li>
+            <li><span class="ico">✓</span><span>Cobertura completa del show — horas de presentación</span></li>
+            <li><span class="ico">✓</span><span>10 clips de cámara editados (20–30 seg) · listos para redes</span></li>
+            <li><span class="ico">✓</span><span>10 clips de dron editados</span></li>
+            <li><span class="ico">✓</span><span>5 clips de dron adicionales — cortesía</span></li>
+            <li><span class="ico">✓</span><span>Aftermovie ~3 min · corte, color, música licenciada</span></li>
+            <li><span class="ico">✓</span><span>Colorización profesional en todas las piezas</span></li>
+            <li><span class="ico">✓</span><span>1 ronda de revisiones por pieza</span></li>
+            <li><span class="ico">✓</span><span>Entrega vía Google Drive / WeTransfer</span></li>
+          </ul>
+        </div>
+        <div class="scope-col">
+          <h4>No incluye <span class="count">5</span></h4>
+          <ul class="scope-list no">
+            <li><span class="ico">−</span><span>Revisiones adicionales fuera de la ronda incluida</span></li>
+            <li><span class="ico">−</span><span>Licencias de música premium (se usa música libre)</span></li>
+            <li><span class="ico">−</span><span>Copias físicas (USB, disco duro)</span></li>
+            <li><span class="ico">−</span><span>Publicación o manejo de redes sociales</span></li>
+            <li><span class="ico">−</span><span>Producción de material fuera del evento</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- COLOR -->
+    <section class="card">
+      <p class="sec-eyebrow">03 · Color</p>
+      <h2 class="sec-title">Pipeline de <span class="gradient">color</span>.</h2>
+      <p class="sec-lead">No es un filtro. Es un proceso técnico de tres pasos que convierte el material crudo en imagen con identidad propia, color natural y atmósfera cinematográfica.</p>
+
+      <div class="flow">
+        <div class="flow-step">
+          <div class="flow-num">01</div>
+          <div class="flow-name">Grabación <span class="tag">S-Log3</span></div>
+          <p class="flow-desc">La cámara captura con perfil S-Log3. El video sale plano y desaturado — guarda el máximo detalle en luces y sombras.</p>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">02</div>
+          <div class="flow-name">Conversión <span class="tag">Rec709</span></div>
+          <p class="flow-desc">El material se transforma al espacio de color estándar de la industria. Colores naturales, exposición balanceada.</p>
+        </div>
+        <div class="flow-step hl">
+          <div class="flow-num">03</div>
+          <div class="flow-name">Color <span class="tag">Grading</span></div>
+          <p class="flow-desc">Se aplica el look creativo: tonos, atmósfera, contraste y la identidad visual que distingue tu contenido del resto.</p>
+        </div>
+      </div>
+
+      <div class="video-card">
+        <iframe src="https://www.youtube.com/embed/0N20gkNeiV0" allowfullscreen=""></iframe>
+        <div class="video-bar">
+          <span>Ejemplo · Zender Lab Color Grading</span>
+          <span class="play">▶ Reproducir</span>
+        </div>
+      </div>
+
+      <div class="compare">
+        <div class="before">
+          <h5>Sin colorización · material crudo</h5>
+          <ul>
+            <li><span class="ico-x">−</span><span>Colores planos y apagados</span></li>
+            <li><span class="ico-x">−</span><span>Piel sin vida, luces quemadas o perdidas</span></li>
+            <li><span class="ico-x">−</span><span>Ambiente frío e impersonal</span></li>
+            <li><span class="ico-x">−</span><span>Aspecto genérico de smartphone</span></li>
+            <li><span class="ico-x">−</span><span>Difícil destacar en el feed</span></li>
+          </ul>
+        </div>
+        <div class="after">
+          <h5>Con colorización profesional</h5>
+          <ul>
+            <li><span class="ico-x">+</span><span>Paleta con identidad visual propia</span></li>
+            <li><span class="ico-x">+</span><span>Piel natural, luces controladas, atmósfera</span></li>
+            <li><span class="ico-x">+</span><span>Ambiente cálido, envolvente o dramático</span></li>
+            <li><span class="ico-x">+</span><span>Aspecto cinematográfico consistente</span></li>
+            <li><span class="ico-x">+</span><span>Contenido que detiene el scroll</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="grade-cards">
+        <div class="grade-card">
+          <div class="gn">01</div>
+          <h6>Corrección de color</h6>
+          <p>Balance de blancos, exposición, sombras y luces. Cada clip queda técnicamente correcto antes de aplicar el look.</p>
+        </div>
+        <div class="grade-card">
+          <div class="gn">02</div>
+          <h6>Look cinematográfico</h6>
+          <p>Se aplica un LUT o look personalizado con identidad visual propia, coherente con el género y el venue.</p>
+        </div>
+        <div class="grade-card">
+          <div class="gn">03</div>
+          <h6>Optimizado para redes</h6>
+          <p>Color calibrado para pantallas de smartphone e Instagram / TikTok, donde la audiencia verá el contenido.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAQUETES INTRO -->
+    <section class="card" style="padding-bottom: 40px;">
+      <p class="sec-eyebrow">04 · Paquetes</p>
+      <h2 class="sec-title">Tres niveles. <span class="gradient">Mismo evento.</span></h2>
+      <p class="sec-lead" style="margin-bottom: 0;">Elige la profundidad de postproducción que mejor se ajuste al alcance que buscas.</p>
+    </section>
+
+    <!-- PREMIUM PRO -->
+    <div class="pkg-card featured">
+      <div class="pkg-head">
+        <div>
+          <div class="pkg-eyebrow">Paquete 01 · Recomendado</div>
+          <h3 class="pkg-name">Premium Pro<span>Cinematográfico · LUT propio · multicámara</span></h3>
+          <p class="pkg-tag">Color grading completo, dirección creativa y multicámara. Para cuando el contenido tiene que verse distinto a todo lo demás.</p>
+        </div>
+        <div class="pkg-price">
+          <div class="label">Desde</div>
+          <div class="num">$20,500</div>
+          <div class="curr">MXN · sin IVA</div>
+        </div>
+      </div>
+
+      <div class="pkg-body">
+        <table class="stable">
+          <thead>
+            <tr><th>Concepto</th><th>Cant.</th><th>Unit.</th><th>Subtotal</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><div class="item-name">Cobertura del evento</div><p class="desc">Operador, equipo, traslado, día completo</p></td>
+              <td>1 día</td><td>$3,500</td><td>$3,500</td>
+            </tr>
+            <tr>
+              <td><div class="item-name">Dirección creativa y guionización <span class="badge">nuevo</span></div><p class="desc">Story, ángulos clave, momentos de captura planificados</p></td>
+              <td>1 evento</td><td>$1,500</td><td>$1,500</td>
+            </tr>
+            <tr>
+              <td><div class="item-name">Clips editados de cámara</div><p class="desc">20–30 seg c/u · corte + colorización profesional · listos para redes</p></td>
+              <td>10 clips</td><td>$550</td><td>$5,500</td>
+            </tr>
+            <tr>
+              <td><div class="item-name">Clips de dron editados</div><p class="desc">Cobertura aérea · corte + colorización</p></td>
+              <td>10 clips</td><td>$550</td><td>$5,500</td>
+            </tr>
+            <tr class="courtesy">
+              <td><div class="item-name">Clips de dron adicionales</div></td>
+              <td>5 clips</td><td>—</td><td>$0</td>
+            </tr>
+            <tr>
+              <td><div class="item-name">Aftermovie editado</div><p class="desc">~3 min · multicam · corte narrativo · colorización · música licenciada</p></td>
+              <td>1 pieza</td><td>$4,500</td><td>$4,500</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="totals">
+          <div class="total-tile"><div class="tk">Subtotal</div><div class="tv">$20,500<span class="cur">MXN</span></div><div class="tnote">Sin IVA</div></div>
+          <div class="total-tile"><div class="tk">IVA 16%</div><div class="tv">$3,280<span class="cur">MXN</span></div><div class="tnote">Solo en transferencia</div></div>
+          <div class="total-tile hero"><div class="tk">Total · Efectivo</div><div class="tv">$20,500<span class="cur">MXN</span></div><div class="tnote">Sin IVA</div></div>
+          <div class="total-tile"><div class="tk">Total · Transferencia</div><div class="tv">$23,780<span class="cur">MXN</span></div><div class="tnote">Con IVA · factura</div></div>
+        </div>
       </div>
     </div>
+
+    <!-- REC709 EXPLAINER -->
+    <section class="card tinted">
+      <p class="sec-eyebrow">Antes de continuar</p>
+      <h2 class="sec-title">¿Qué es <span class="gradient">Rec709</span>?</h2>
+      <div class="rec-block">
+        <div class="rec-text">
+          <p>Cuando una cámara profesional graba en <strong>S-Log3</strong>, el video sale plano y grisáceo — así captura el máximo detalle posible. Convertirlo a <strong>Rec709</strong> es llevar ese material a los colores naturales que el ojo humano espera ver.</p>
+          <p>No es un filtro. Es la corrección técnica estándar de la industria televisiva y cinematográfica. El resultado se ve <em>notablemente más profesional</em> que un video automático de cualquier cámara o teléfono — sin llegar al look completamente personalizado del color grading del Premium Pro.</p>
+        </div>
+        <div class="video-card compact" style="margin-bottom: 0;">
+          <iframe src="https://www.youtube.com/embed/iyiYLeAgSOc" allowfullscreen=""></iframe>
+          <div class="video-bar">
+            <span>Rec709 · S-Log3</span>
+            <span class="play">▶ Ver</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRO REC709 -->
+    <div class="pkg-card">
+      <div class="pkg-head">
+        <div>
+          <div class="pkg-eyebrow">Paquete 02</div>
+          <h3 class="pkg-name">Pro · Rec709<span>Look profesional · entrega ágil</span></h3>
+          <p class="pkg-tag">S-Log3 → Rec709, edición limpia y consistente. Tu evento se ve profesional sin el peso de la postproducción completa.</p>
+        </div>
+        <div class="pkg-price">
+          <div class="label">Desde</div>
+          <div class="num">$15,000</div>
+          <div class="curr">MXN · sin IVA</div>
+        </div>
+      </div>
+      <div class="pkg-body">
+        <table class="stable">
+          <thead><tr><th>Concepto</th><th>Cant.</th><th>Unit.</th><th>Subtotal</th></tr></thead>
+          <tbody>
+            <tr><td><div class="item-name">Cobertura del evento</div><p class="desc">Operador, equipo, traslado, día completo</p></td><td>1 día</td><td>$3,500</td><td>$3,500</td></tr>
+            <tr><td><div class="item-name">Dirección creativa y guionización</div><p class="desc">Story, ángulos clave, momentos de captura planificados</p></td><td>1 evento</td><td>$1,500</td><td>$1,500</td></tr>
+            <tr><td><div class="item-name">Clips de cámara · Rec709</div><p class="desc">20–30 seg c/u · S-Log3 → Rec709 · corrección técnica</p></td><td>10 clips</td><td>$350</td><td>$3,500</td></tr>
+            <tr><td><div class="item-name">Clips de dron · Rec709</div><p class="desc">Cobertura aérea · corrección técnica básica</p></td><td>10 clips</td><td>$350</td><td>$3,500</td></tr>
+            <tr class="courtesy"><td><div class="item-name">Clips de dron adicionales</div></td><td>5 clips</td><td>—</td><td>$0</td></tr>
+            <tr><td><div class="item-name">Aftermovie editado · simple</div><p class="desc">~3 min · corte · Rec709 · música licenciada · sin look creativo</p></td><td>1 pieza</td><td>$3,000</td><td>$3,000</td></tr>
+          </tbody>
+        </table>
+        <div class="totals">
+          <div class="total-tile"><div class="tk">Subtotal</div><div class="tv">$15,000<span class="cur">MXN</span></div><div class="tnote">Sin IVA</div></div>
+          <div class="total-tile"><div class="tk">IVA 16%</div><div class="tv">$2,400<span class="cur">MXN</span></div><div class="tnote">Solo en transferencia</div></div>
+          <div class="total-tile hero"><div class="tk">Total · Efectivo</div><div class="tv">$15,000<span class="cur">MXN</span></div><div class="tnote">Sin IVA</div></div>
+          <div class="total-tile"><div class="tk">Total · Transferencia</div><div class="tv">$17,400<span class="cur">MXN</span></div><div class="tnote">Con IVA · factura</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMPLETO -->
+    <div class="pkg-card">
+      <div class="pkg-head">
+        <div>
+          <div class="pkg-eyebrow">Paquete 03</div>
+          <h3 class="pkg-name">Paquete Completo<span>Lo esencial · sin complicaciones</span></h3>
+          <p class="pkg-tag">Cobertura completa del evento usando el color nativo de la cámara. Punto de entrada al servicio.</p>
+        </div>
+        <div class="pkg-price">
+          <div class="label">Desde</div>
+          <div class="num">$10,000</div>
+          <div class="curr">MXN · sin IVA</div>
+        </div>
+      </div>
+      <div class="pkg-body">
+        <table class="stable">
+          <thead><tr><th>Concepto</th><th>Cant.</th><th>Unit.</th><th>Subtotal</th></tr></thead>
+          <tbody>
+            <tr><td><div class="item-name">Cobertura del evento</div><p class="desc">Operador, equipo, traslado, día completo</p></td><td>1 día</td><td>$3,500</td><td>$3,500</td></tr>
+            <tr><td><div class="item-name">Clips de cámara editados · Rec709</div><p class="desc">Máx. 20 seg c/u · corrección técnica · listos para redes</p></td><td>10 clips</td><td>$200</td><td>$2,000</td></tr>
+            <tr><td><div class="item-name">Clips de dron editados</div><p class="desc">5 incluidos + 5 regulares · corrección técnica</p></td><td>10 clips</td><td>$200</td><td>$2,000</td></tr>
+            <tr><td><div class="item-name">Aftermovie editado · 1:30 min</div><p class="desc">Corte simple · Rec709 · música licenciada</p></td><td>1 pieza</td><td>$2,500</td><td>$2,500</td></tr>
+          </tbody>
+        </table>
+        <div class="totals">
+          <div class="total-tile"><div class="tk">Subtotal</div><div class="tv">$10,000<span class="cur">MXN</span></div><div class="tnote">Sin IVA</div></div>
+          <div class="total-tile"><div class="tk">IVA 16%</div><div class="tv">$1,600<span class="cur">MXN</span></div><div class="tnote">Solo en transferencia</div></div>
+          <div class="total-tile hero"><div class="tk">Total · Efectivo</div><div class="tv">$10,000<span class="cur">MXN</span></div><div class="tnote">Sin IVA</div></div>
+          <div class="total-tile"><div class="tk">Total · Transferencia</div><div class="tv">$11,600<span class="cur">MXN</span></div><div class="tnote">Con IVA · factura</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GARANTÍA -->
+    <section class="card">
+      <p class="sec-eyebrow">05 · Garantía</p>
+      <h2 class="sec-title">Cumplimos. <span class="gradient">O dejas de pagar.</span></h2>
+      <p class="guarantee-pull">
+        Por cada día natural de retraso, <u>20% de descuento sobre el saldo remanente</u>. Si nos pasamos por <b>cinco días</b>, el saldo pendiente se va a cero.
+      </p>
+      <table class="pen-table">
+        <thead>
+          <tr><th>Días de retraso</th><th>Descuento</th><th>Saldo a pagar</th><th>Ahorro cliente</th></tr>
+        </thead>
+        <tbody>
+          <tr class="ok"><td>En tiempo</td><td>0%</td><td>50% del paquete</td><td>$0</td></tr>
+          <tr><td>1 día</td><td>20%</td><td>40% del paquete</td><td>10%</td></tr>
+          <tr><td>2 días</td><td>40%</td><td>30% del paquete</td><td>20%</td></tr>
+          <tr><td>3 días</td><td>60%</td><td>20% del paquete</td><td>30%</td></tr>
+          <tr class="warn"><td>4 días</td><td>80%</td><td>10% del paquete</td><td>40%</td></tr>
+          <tr class="danger"><td>5+ días</td><td>100%</td><td>$0 — gratis</td><td>50% del total</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- CONDICIONES -->
+    <section class="card">
+      <p class="sec-eyebrow">06 · Condiciones</p>
+      <h2 class="sec-title">Términos del <span class="gradient">acuerdo</span>.</h2>
+      <p class="sec-lead">Pagos, fechas y vigencia — todo lo que rige este servicio.</p>
+      <ol class="cond-list">
+        <li><span>Para confirmar el servicio se requiere el <b>50% de anticipo</b> antes del viernes 8 de mayo de 2025.</span></li>
+        <li><span>El <b>50% restante</b> se liquida a la entrega del material en las fechas acordadas.</span></li>
+        <li><span><b>Pago en efectivo:</b> no genera IVA.</span></li>
+        <li><span><b>Pago por transferencia bancaria:</b> se agrega IVA del 16%. Se emite factura fiscal.</span></li>
+        <li><span><span class="red">Garantía de entrega:</span> por cada día natural de retraso se aplica automáticamente un descuento del 20% sobre el saldo remanente. A partir del quinto día, el saldo es <span class="red">$0</span>.</span></li>
+        <li><span>Se incluye <b>1 ronda de revisiones</b> por pieza. Revisiones adicionales tienen costo extra a convenir.</span></li>
+        <li><span>En caso de <b>cancelación con menos de 48 hrs</b> de anticipación, el anticipo no es reembolsable.</span></li>
+        <li><span>Esta cotización tiene vigencia de <b style="">1 días naturales</b> a partir de la fecha de emisión.</span></li>
+      </ol>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="foot">
+      <div class="foot-mark">
+        <img src="assets/zender-logo.jpg" alt="Zender Lab">
+        <div class="tag">Zender Lab · est. mmxxiv</div>
+      </div>
+      <div class="foot-quote" style=""><span><font color="#ffffff"><span style="font-size: 22px; letter-spacing: -0.484px;"><br></span></font>Producción audiovisual</span>
+      </div>
+      <div class="foot-end" style="">
+        <b style="">Zenderlab.com</b><br>COT–2025–002<br>
+        v1 · 06.05.2025
+      </div>
+    </footer>
+
   </div>
-</header>
-
-<main>
-
-<!-- DATOS -->
-<section>
-  <div class="container">
-    <p class="section-label">Datos del proyecto</p>
-    <div class="info-grid">
-      <div class="info-cell">
-        <p class="info-cell-label">Cliente</p>
-        <div class="info-row"><span class="info-key">Empresa</span><span class="info-val">Playa Vikingos Beach Club</span></div>
-        <div class="info-row"><span class="info-key">Artista</span><span class="info-val">FLVCKKA</span></div>
-        <div class="info-row"><span class="info-key">Género</span><span class="info-val">Reggaeton</span></div>
-        <div class="info-row"><span class="info-key">Tipo de evento</span><span class="info-val">Show en vivo — cobertura completa</span></div>
-      </div>
-      <div class="info-cell">
-        <p class="info-cell-label">Fechas de entrega</p>
-        <div class="info-row"><span class="info-key">Fecha del evento</span><span class="info-val">Sábado 9 de mayo</span></div>
-        <div class="info-row"><span class="info-key">Clips (cámara + dron)</span><span class="info-val">Jueves 14 de mayo</span></div>
-        <div class="info-row"><span class="info-key">Aftermovie 3 min editado</span><span class="info-val">Viernes 15 de mayo</span></div>
-        <div class="info-row"><span class="info-key">Método de entrega</span><span class="info-val">Google Drive / WeTransfer</span></div>
-      </div>
-    </div>
-  </div>
-</section>
+</div>
 
 
-<!-- INCLUYE / NO INCLUYE -->
-<section>
-  <div class="container">
-    <p class="section-label">Alcance del servicio</p>
-    <div class="two-col">
-      <div class="list-block">
-        <h3>Incluye</h3>
-        <ul class="check-list">
-          <li><span class="ico yes">✓</span>Dirección creativa y guionización del evento</li>
-          <li><span class="ico yes">✓</span>Cobertura completa del show (horas de presentación)</li>
-          <li><span class="ico yes">✓</span>10 clips editados de cámara (20–30 seg) — listos para redes</li>
-          <li><span class="ico yes">✓</span>10 clips de dron editados</li>
-          <li><span class="ico yes">✓</span>5 clips de dron adicionales — cortesía</li>
-          <li><span class="ico yes">✓</span>Aftermovie ~3 min (corte, colorización, música licenciada)</li>
-          <li><span class="ico yes">✓</span>Colorización profesional en todas las piezas</li>
-          <li><span class="ico yes">✓</span>1 ronda de revisiones por pieza</li>
-          <li><span class="ico yes">✓</span>Entrega vía Google Drive / WeTransfer</li>
-        </ul>
-      </div>
-      <div class="list-block">
-        <h3>No incluye</h3>
-        <ul class="check-list">
-          <li class="dim"><span class="ico no">✕</span>Revisiones adicionales fuera de la ronda incluida</li>
-          <li class="dim"><span class="ico no">✕</span>Licencias de música premium (se usa música libre)</li>
-          <li class="dim"><span class="ico no">✕</span>Copias físicas (USB, disco duro)</li>
-          <li class="dim"><span class="ico no">✕</span>Publicación o manejo de redes sociales</li>
-          <li class="dim"><span class="ico no">✕</span>Producción de material fuera del evento</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- COLORIZACIÓN -->
-<section>
-  <div class="container">
-    <p class="section-label">Colorización profesional — ¿qué es y por qué importa?</p>
-    <p class="color-intro">
-      La colorización no es un filtro. Es el proceso de transformar el material crudo de cámara en una pieza
-      con identidad visual propia que comunica emoción, ambiente y profesionalismo.
-      El siguiente video muestra la diferencia directa entre el material sin procesar y el resultado final con color grading aplicado.
-    </p>
-
-    <div class="color-intro">
-      Premium Pro incluye color grading cinematográfico completo, look creativo propio y material optimizado para redes.
-    </div>
-    <div class="total-row main" style="margin-top: 24px;">
-      <div class="total-label">Precio versión Premium Pro <small>Sin IVA</small></div>
-      <div class="total-amount">$20,500 MXN</div>
-    </div>
-
-    <div class="video-compare">
-      <iframe width="100%" height="520" style="display: block; background: #000;" src="https://www.youtube.com/embed/iyiYLeAgSOc" title="Color Grading - Zender Lab" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-      <div class="video-label">
-        <span>Ejemplo real — Zender Lab Color Grading</span>
-        <span class="play-hint">▶ Reproducir para ver la diferencia</span>
-      </div>
-    </div>
-
-    <div class="compare-grid">
-      <div class="compare-col before">
-        <h4>Sin colorización — Material crudo</h4>
-        <ul class="compare-list">
-          <li><span class="ico-cmp">—</span>Colores planos y apagados</li>
-          <li><span class="ico-cmp">—</span>Piel sin vida, luces quemadas o perdidas</li>
-          <li><span class="ico-cmp">—</span>Ambiente frío e impersonal</li>
-          <li><span class="ico-cmp">—</span>Aspecto genérico de smartphone</li>
-          <li><span class="ico-cmp">—</span>Difícil destacar en el feed</li>
-        </ul>
-      </div>
-      <div class="compare-col after">
-        <h4>Con colorización profesional</h4>
-        <ul class="compare-list">
-          <li><span class="ico-cmp">+</span>Paleta con identidad visual propia</li>
-          <li><span class="ico-cmp">+</span>Piel natural, luces controladas y atmósfera</li>
-          <li><span class="ico-cmp">+</span>Ambiente cálido, envolvente o dramático</li>
-          <li><span class="ico-cmp">+</span>Aspecto cinematográfico consistente</li>
-          <li><span class="ico-cmp">+</span>Contenido que detiene el scroll</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="grade-cards">
-      <div class="grade-card">
-        <div class="grade-num">01</div>
-        <div class="grade-title">Corrección de color</div>
-        <p class="grade-desc">Balance de blancos, exposición, sombras y luces. Cada clip queda técnicamente correcto antes de aplicar el look.</p>
-      </div>
-      <div class="grade-card">
-        <div class="grade-num">02</div>
-        <div class="grade-title">Look cinematográfico</div>
-        <p class="grade-desc">Se aplica un LUT o look personalizado con identidad visual propia, coherente con el género y el venue.</p>
-      </div>
-      <div class="grade-card">
-        <div class="grade-num">03</div>
-        <div class="grade-title">Optimizado para redes</div>
-        <p class="grade-desc">Color calibrado para pantallas de smartphone e Instagram / TikTok, donde la audiencia verá el contenido.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- VERSION PRO -->
-<section>
-  <div class="container">
-    <p class="section-label">Versión Pro — Rec709 + edición simple</p>
-    <p class="color-intro">
-      Si no necesitas una producción tan tan premium, este paquete es para ti. No incluye color grading cinematográfico: solo conversión S-Log3 a Rec709 y corrección de color técnica.
-    </p>
-    <p class="color-intro">
-      Este paquete ofrece una entrega más rápida y una edición más sencilla. Todo el material se graba en <strong>S-Log3</strong>, se convierte a <strong>Rec709</strong> y luego se aplica una <strong>corrección de color técnica</strong>.
-      No incluye look creativo avanzado; se entrega una edición simple con tono natural y consistencia técnica.
-    </p>
-    <p class="color-intro">
-      Proceso de color: material grabado en S-Log3 → conversión a Rec709 estándar → corrección de color (balance de blancos, exposición, contraste y saturación básica).
-    </p>
-    <div class="video-compare">
-      <iframe width="100%" height="520" style="display: block; background: #000;" src="https://www.youtube.com/embed/0N20gkNeiV0" title="Rec709 y corrección de color - ejemplo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-      <div class="video-label">
-        <span>Ejemplo Pro — Rec709 y edición simple</span>
-        <span class="play-hint">▶ Ver proceso de color básico</span>
-      </div>
-    </div>
-    <div class="compare-grid">
-      <div class="compare-col before">
-        <h4>Incluye</h4>
-        <ul class="compare-list">
-          <li><span class="ico-cmp">+</span>Material grabado en S-Log3</li>
-          <li><span class="ico-cmp">+</span>Conversión a Rec709</li>
-          <li><span class="ico-cmp">+</span>Corrección de color técnica</li>
-          <li><span class="ico-cmp">+</span>Edición simple y entrega ágil</li>
-          <li><span class="ico-cmp">+</span>Revisión básica del corte</li>
-        </ul>
-      </div>
-      <div class="compare-col after">
-        <h4>No incluye</h4>
-        <ul class="compare-list">
-          <li><span class="ico-cmp">—</span>Color grading cinematográfico</li>
-          <li><span class="ico-cmp">—</span>Look creativo avanzado</li>
-          <li><span class="ico-cmp">—</span>Edición compleja o multicam fina</li>
-        </ul>
-      </div>
-    </div>
-    <div class="total-row main" style="margin-top: 24px;">
-      <div class="total-label">Precio versión Pro <small>Sin IVA</small></div>
-      <div class="total-amount">$15,000 MXN</div>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="container">
-    <p class="section-label">Si quieres toda tu producción cubierta pero no requieres tanto material... el paquete completo es para ti</p>
-    <p class="color-intro">
-      Este paquete incluye un aftermovie de <strong>1 minuto y medio</strong>, <strong>10 clips</strong> con máximo <strong>20 segundos</strong> cada uno, y <strong>10 videos de dron</strong> (5 incluidos + 5 adicionales regulares).
-      Es una versión completa para entregar presencia visual sin un volumen excesivo de material.
-    </p>
-    <div class="compare-grid">
-      <div class="compare-col before">
-        <h4>Incluye</h4>
-        <ul class="compare-list">
-          <li><span class="ico-cmp">+</span>Aftermovie 1:30 min</li>
-          <li><span class="ico-cmp">+</span>10 clips de cámara (máx. 20 seg c/u)</li>
-          <li><span class="ico-cmp">+</span>10 videos de dron (5 incluidos + 5 regulares)</li>
-          <li><span class="ico-cmp">+</span>Corrección de color técnica</li>
-        </ul>
-      </div>
-      <div class="compare-col after">
-        <h4>No incluye</h4>
-        <ul class="compare-list">
-          <li><span class="ico-cmp">—</span>Color grading cinematográfico avanzado</li>
-          <li><span class="ico-cmp">—</span>Edición compleja multicam extendida</li>
-        </ul>
-      </div>
-    </div>
-    <div class="total-row main" style="margin-top: 24px;">
-      <div class="total-label">Precio paquete completo <small>Sin IVA</small></div>
-      <div class="total-amount">$10,000 MXN</div>
-    </div>
-  </div>
-</section>
-
-<!-- SERVICIOS -->
-<section>
-  <div class="container">
-    <p class="section-label">Desglose de servicios</p>
-    <table class="services-table">
-      <thead>
-        <tr>
-          <th>Concepto</th>
-          <th>Cant.</th>
-          <th>Precio unit.</th>
-          <th>Subtotal</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Cobertura del evento — operador, equipo, traslado, día completo</td>
-          <td>1 día</td>
-          <td>$3,500</td>
-          <td>$3,500</td>
-        </tr>
-        <tr>
-          <td>Dirección creativa y guionización <span class="tag tag-new">nuevo</span><br><small style="color:var(--muted);font-size:12px">Story, ángulos clave, momentos de captura planificados</small></td>
-          <td>1 evento</td>
-          <td>$1,500</td>
-          <td>$1,500</td>
-        </tr>
-        <tr>
-          <td>Clips editados de cámara<br><small style="color:var(--muted);font-size:12px">20–30 seg c/u · corte + colorización profesional · listos para redes</small></td>
-          <td>10 clips</td>
-          <td>$550</td>
-          <td>$5,500</td>
-        </tr>
-        <tr>
-          <td>Clips de dron editados<br><small style="color:var(--muted);font-size:12px">Cobertura aérea · corte + colorización</small></td>
-          <td>10 clips</td>
-          <td>$550</td>
-          <td>$5,500</td>
-        </tr>
-        <tr class="courtesy">
-          <td>Clips de dron adicionales</td>
-          <td>5 clips</td>
-          <td>—</td>
-          <td>$0</td>
-        </tr>
-        <tr>
-          <td>Aftermovie editado<br><small style="color:var(--muted);font-size:12px">~3 min · multicam · corte narrativo · colorización · música licenciada</small></td>
-          <td>1 pieza</td>
-          <td>$4,500</td>
-          <td>$4,500</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="totals">
-      <div class="total-row sub">
-        <div class="total-label">Subtotal <small>Sin IVA</small></div>
-        <div class="total-amount">$20,500 MXN</div>
-      </div>
-      <div class="total-row iva">
-        <div class="total-label">IVA 16% <small>Solo aplica si el pago es por transferencia bancaria</small></div>
-        <div class="total-amount" style="color:var(--gold)">$3,280 MXN</div>
-      </div>
-      <div class="total-row main">
-        <div class="total-label">Total — Pago en efectivo <small>Sin IVA</small></div>
-        <div class="total-amount">$20,500 MXN</div>
-      </div>
-      <div class="total-row alt">
-        <div class="total-label">Total — Transferencia bancaria <small>Con IVA 16% · se emite factura</small></div>
-        <div class="total-amount">$23,780 MXN</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- GARANTIA -->
-<section>
-  <div class="container">
-    <p class="section-label">Garantía de entrega</p>
-    <p class="guarantee-intro">
-      Zender Lab se compromete a las fechas acordadas. En caso de retraso, se aplica automáticamente
-      un descuento del <strong style="color:var(--white)">20% sobre el saldo remanente</strong> por cada día natural de demora.
-      A partir del quinto día, el saldo pendiente es <strong style="color:var(--red)">$0</strong>.
-    </p>
-    <table class="penalty-table">
-      <thead>
-        <tr>
-          <th>Días de retraso</th>
-          <th>Descuento</th>
-          <th>Saldo a pagar</th>
-          <th>Ahorro cliente</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="ok">
-          <td>En tiempo ✓</td>
-          <td>0%</td>
-          <td>$10,250</td>
-          <td>$0</td>
-        </tr>
-        <tr>
-          <td>1 día</td>
-          <td>20%</td>
-          <td>$8,200</td>
-          <td>$2,050</td>
-        </tr>
-        <tr>
-          <td>2 días</td>
-          <td>40%</td>
-          <td>$6,150</td>
-          <td>$4,100</td>
-        </tr>
-        <tr>
-          <td>3 días</td>
-          <td>60%</td>
-          <td>$4,100</td>
-          <td>$6,150</td>
-        </tr>
-        <tr>
-          <td>4 días</td>
-          <td>80%</td>
-          <td>$2,050</td>
-          <td>$8,200</td>
-        </tr>
-        <tr class="danger">
-          <td>5+ días</td>
-          <td>100%</td>
-          <td>$0 — GRATIS</td>
-          <td>$10,250</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</section>
-
-<!-- CONDICIONES -->
-<section>
-  <div class="container">
-    <p class="section-label">Términos y condiciones</p>
-    <ul class="conditions-list">
-      <li>
-        <span class="num">01</span>
-        <span>Para confirmar el servicio se requiere el <span class="highlight">50% de anticipo ($10,250 MXN)</span> antes del viernes 8 de mayo de 2025.</span>
-      </li>
-      <li>
-        <span class="num">02</span>
-        <span>El <span class="highlight">50% restante ($10,250 MXN)</span> se liquida a la entrega del material en las fechas acordadas.</span>
-      </li>
-      <li>
-        <span class="num">03</span>
-        <span><span class="highlight">Pago en efectivo:</span> No genera IVA. Total final <strong>$20,500 MXN</strong>.</span>
-      </li>
-      <li>
-        <span class="num">04</span>
-        <span><span class="highlight">Pago por transferencia bancaria:</span> Se agrega IVA del 16%. Total final <strong>$23,780 MXN</strong>. Se emite factura fiscal.</span>
-      </li>
-      <li>
-        <span class="num">05</span>
-        <span><span class="red">Garantía de entrega:</span> Por cada día natural de retraso se aplica automáticamente un descuento del 20% sobre el saldo remanente. A partir del quinto día, el saldo es <span class="red">$0</span>.</span>
-      </li>
-      <li>
-        <span class="num">06</span>
-        <span>Se incluye <span class="highlight">1 ronda de revisiones</span> por pieza. Revisiones adicionales tienen costo extra a convenir.</span>
-      </li>
-      <li>
-        <span class="num">07</span>
-        <span>En caso de <span class="highlight">cancelación con menos de 48 hrs de anticipación</span>, el anticipo no es reembolsable.</span>
-      </li>
-      <li>
-        <span class="num">08</span>
-        <span>Esta cotización tiene vigencia de <span class="highlight">7 días naturales</span> a partir de la fecha de emisión.</span>
-      </li>
-    </ul>
-  </div>
-</section>
-
-</main>
-
-<footer>
-  <img src="zenderlab_logoooo.png" alt="Zender Lab">
-  <p>Zender Lab &nbsp;·&nbsp; Producción Audiovisual Profesional</p>
-</footer>
-
-</body>
-</html>
+</body></html>
